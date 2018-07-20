@@ -31,10 +31,47 @@
   width: 100%;
   height: 150px;
   background-color: #51bb85;
+  position: fixed;
+  top: 0;
+  left: 0;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  overflow: auto;
 }
 
 .appLogo {
-  position: absolute;
-  top: 20px;
-  left: 400px;
+  display: block;
+}
+
+.container {
+  width: 100%;
+  position: fixed;
+  top: 170px;
+  left: 0;
+  display: flex;
+  align-items: center;
+  align-content: center;
+  justify-content: center;
+  overflow: auto;
+  flex-direction: column;
+}
+
+.addProductInput {
+  display: block;
+  height: 35px;
+}
+
+.productList {
+  display: block;
+  text-align: left;
+}
+
+.listItem {
+  height: 25px;
+}
+
+.buttonDelete {
+  float: right;
 }
