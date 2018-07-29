@@ -75,3 +75,16 @@
 .buttonDelete {
   float: right;
 }
+
+.searchResult {
+  display: block;
+  text-align: left;
+}
+
+.searchItem {
+  height: 25px;
+}
+
+.addButton {
+  float: right;
+}

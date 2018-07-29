@@ -6,23 +6,38 @@ import Checkbox from 'rc-checkbox';
 import 'rc-checkbox/assets/index.css';
 import axios from "axios";
 
+
 class App extends Component {
   state = {
     editId: null,
     editValue: null,
     editDate: null,
     disabled: false,
-    chicken: []
+    request: [],
+    product: {
+      item_name: '',
+      nf_calories: '',
+      nf_protein: '',
+      nf_total_fat: '',
+      nf_total_carbohydrate: ''
+    }
   };
 
-  componentDidMount() {
-    axios.get('https://api.nutritionix.com/v1_1/search/chicken?fields=item_name,nf_calories,nf_protein,nf_total_fat,nf_total_carbohydrate&appId=512c26a2&appKey=31d88d7dc9513810423da0ee1c4b96a8')
-    .then(res => {
-      const chicken = res.data;
-      this.setState({chicken: chicken});
-    })
-  }
-
+getData(request) {
+  axios.get('https://api.nutritionix.com/v1_1/search/'
+  + request
+  + '?fields=item_name,nf_calories,nf_protein,nf_total_fat,nf_total_carbohydrate'
+  + '&appId=512c26a2&appKey=31d88d7dc9513810423da0ee1c4b96a8')
+  .then(res => {
+    var result = [];
+    const request = Object.values(res.data)[2].splice(4,5);
+    request.map((item, key) => {
+      result[Math.round(item.fields.nf_calories)] = item.fields;
+    });
+    this.setState({request: result});
+    console.log(this.state.request);
+  })
+}
 
   render() {
     const { data,
@@ -35,32 +50,62 @@ class App extends Component {
     } = this.props;
     return (
       <div className="App">
-      {console.log(this.state.chicken)}
         <div className="appHeader">
           <img src={logo} className="appLogo" />
         </div>
       <div className="container">
         <div className="contentAlign">
           <div className="addProductInput">
-            <input name="name" ref={el => (this.input = el)} />
+            <input name="name" ref={el => (this.input = el)}/>
             <button
               onClick={() => {
-                this.input.value && handleClick(this.input.value);
-                this.input.value = "";
+                this.getData(this.input.value);
               }}
               >
-              Add
+              Search
             </button>
+          </div>
+          <div className="searchResult">
+            {this.state.request.map((product, key) => (
+              <div className="searchItem" key={key}>
+                <label>
+                  {product.item_name}
+                  <button
+                    className="addButton"
+                    onClick={() => {
+                      product.item_name && handleClick(product.item_name, key);
+                      this.input.value = "";
+                      this.setState({
+                        product: {
+                            key: key,
+                            item_name: product.item_name,
+                            nf_calories: product.nf_calories,
+                            nf_protein: product.nf_protein,
+                            nf_total_fat: product.nf_total_fat,
+                            nf_total_carbohydrate: product.nf_total_carbohydrate
+                        }
+                      });
+                    }}
+                    >
+                    Add
+                  </button>
+                </label>
+              </div>
+            ))}
           </div>
           <div className="productList">
             {data.map((i, key) => (
               <div className="listItem" key={key}>
                 <label>
+                {console.log(this.state.request.item_name)}
                   <Checkbox
                     type="checkbox"
                     disabled={this.state.disabled}
                   />
-                    {i.value}
+                    {i.value} |
+                    {this.state.request.map((product, key) => (
+                       i.key == key && `${product.nf_calories} | ${product.nf_protein} | ${product.nf_total_fat} | ${product.nf_total_carbohydrate}`
+                    ))}
                 </label>
                 <button className="buttonDelete" onClick={() => {
                   if(this.state.editId !== i.date) {
@@ -86,11 +131,11 @@ export default connect(
     data: state
   }),
   dispatch => ({
-    handleClick: value =>
+    handleClick: (value, key) =>
       dispatch({
         type: "ADD_TRACK",
         payload: {
-          date: new Date().valueOf(),
+          key: key,
           value: value
         }
       }),
