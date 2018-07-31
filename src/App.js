@@ -10,17 +10,8 @@ import axios from "axios";
 class App extends Component {
   state = {
     editId: null,
-    editValue: null,
-    editDate: null,
     disabled: false,
-    request: [],
-    product: {
-      item_name: '',
-      nf_calories: '',
-      nf_protein: '',
-      nf_total_fat: '',
-      nf_total_carbohydrate: ''
-    }
+    request: []
   };
 
 getData(request) {
@@ -54,72 +45,115 @@ getData(request) {
           <img src={logo} className="appLogo" />
         </div>
       <div className="container">
-        <div className="contentAlign">
-          <div className="addProductInput">
-            <input name="name" ref={el => (this.input = el)}/>
-            <button
-              onClick={() => {
-                this.getData(this.input.value);
-              }}
-              >
-              Search
-            </button>
-          </div>
-          <div className="searchResult">
-            {this.state.request.map((product, key) => (
-              <div className="searchItem" key={key}>
-                <label>
-                  {product.item_name}
-                  <button
-                    className="addButton"
-                    onClick={() => {
-                      product.item_name && handleClick(product.item_name, key);
-                      this.input.value = "";
-                      this.setState({
-                        product: {
-                            key: key,
-                            item_name: product.item_name,
-                            nf_calories: product.nf_calories,
-                            nf_protein: product.nf_protein,
-                            nf_total_fat: product.nf_total_fat,
-                            nf_total_carbohydrate: product.nf_total_carbohydrate
-                        }
-                      });
-                    }}
-                    >
-                    Add
-                  </button>
-                </label>
-              </div>
-            ))}
-          </div>
-          <div className="productList">
-            {data.map((i, key) => (
-              <div className="listItem" key={key}>
-                <label>
-                {console.log(this.state.request.item_name)}
-                  <Checkbox
-                    type="checkbox"
-                    disabled={this.state.disabled}
-                  />
-                    {i.value} |
-                    {this.state.request.map((product, key) => (
-                       i.key == key && `${product.nf_calories} | ${product.nf_protein} | ${product.nf_total_fat} | ${product.nf_total_carbohydrate}`
-                    ))}
-                </label>
-                <button className="buttonDelete" onClick={() => {
-                  if(this.state.editId !== i.date) {
-                    onDelete(key);
-                    this.setState({editId: null});
-                  }
+        <div className="searchWindow">
+          <div className="input-group mb-3">
+            <input
+              className="form-control"
+              name="name"
+              ref={el => (this.input = el)}
+            />
+            <div className="input-group-append">
+              <button
+                className="btn btn-success"
+                onClick={() => {
+                  this.getData(this.input.value);
                 }}
                 >
-                  Delete
+                  Search
                 </button>
-              </div>
+            </div>
+          </div>
+          <div className="searchResult">
+            <table className="table">
+            <tbody>
+              {this.state.request.map((product, key) => (
+                <tr key={key}>
+                  <td>
+                    <label>
+                      {product.item_name}
+                    </label>
+                  </td>
+                  <td>
+                    <button
+                      className="btn btn-outline-success"
+                      onClick={() => {
+                        product.item_name && handleClick(product.item_name, key);
+                        this.input.value = "";
+                      }}
+                    >
+                      Add
+                    </button>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+            </table>
+          </div>
+          </div>
+          <hr/>
+          <div className="productList">
+            {data.map((i, key) => (
+              <table className="table">
+              <tbody>
+                <tr key={key}>
+                  <td>
+                    <Checkbox
+                      type="checkbox"
+                      disabled={this.state.disabled}
+                    />
+                  </td>
+                  <td>
+                    <label>
+                      {i.value}
+                    </label>
+                  </td>
+                  <td>
+                    <label>
+                      {this.state.request.map((product, key) => (
+                        i.key == key && product.nf_calories
+                      ))}
+                    </label>
+                  </td>
+                  <td>
+                    <label>
+                      {this.state.request.map((product, key) => (
+                        i.key == key && product.nf_protein
+                      ))}
+                    </label>
+                  </td>
+                  <td>
+                    <label>
+                      {this.state.request.map((product, key) => (
+                        i.key == key && product.nf_total_fat
+                      ))}
+                    </label>
+                  </td>
+                  <td>
+                    <label>
+                      {this.state.request.map((product, key) => (
+                        i.key == key && product.nf_total_carbohydrate
+                      ))}
+                    </label>
+                  </td>
+                  <td>
+                    <button className="btn btn-success" onClick={() => {
+                      if(this.state.editId !== i.date) {
+                        onDelete(key);
+                        this.setState({editId: null});
+                      }
+                    }}
+                    >
+                      Delete
+                    </button>
+                  </td>
+                </tr>
+              </tbody>
+              </table>
             ))}
           </div>
-        </div>
+          <div>
+          atatata
+          </div>
       </div>
     </div>
     );

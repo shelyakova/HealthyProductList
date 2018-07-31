@@ -60,7 +60,6 @@
 
 .addProductInput {
   display: block;
-  height: 35px;
 }
 
 .productList {
@@ -85,6 +84,24 @@
   height: 25px;
 }
 
-.addButton {
+.btn btn-outline-success {
   float: right;
+}
+
+.searchWindow {
+  display: block;
+  border: 1px solid;
+  border-color: #51bb85;
+  padding: 20px;
+  border-radius: 8px;
+  width: 600px;
+}
+
+.searchLine {
+  float:right;
+}
+
+.table {
+  position: relative;
+  width: 500px;
 }
